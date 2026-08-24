@@ -196,6 +196,9 @@ const ManageStores = () => {
                 <th onClick={() => requestSort('name')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
                   Store Name {sortConfig.key === 'name' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Assigned Owner
+                </th>
                 <th onClick={() => requestSort('email')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
                   Email {sortConfig.key === 'email' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                 </th>
@@ -222,6 +225,13 @@ const ManageStores = () => {
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{store.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {store.owner_name ? (
+                      <span className="text-gray-900 font-medium">{store.owner_name} <br/><span className="text-gray-400 text-xs">{store.owner_email}</span></span>
+                    ) : (
+                      <span className="text-red-500 font-medium">Unassigned</span>
+                    )}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{store.email}</td>
                   <td className="px-6 py-4 text-sm text-gray-500">{store.address}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-accent">

@@ -46,6 +46,20 @@ const storeController = {
       console.error('Error in bulk store creation:', error);
       res.status(500).json({ message: 'Server error during bulk store creation' });
     }
+  },
+
+  getStoresByOwner: async (req, res) => {
+    try {
+      const owner_id = req.user.id;
+      // We can reuse a model function or write a quick query.
+      // Let's add it to storeModel if we want, or just query it here if simple.
+      const storeModel = require('../models/storeModel');
+      const stores = await storeModel.findStoresByOwnerId(owner_id);
+      res.status(200).json(stores);
+    } catch (error) {
+      console.error('Error fetching owner stores:', error);
+      res.status(500).json({ message: 'Server error fetching owner stores' });
+    }
   }
 };
 

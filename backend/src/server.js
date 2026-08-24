@@ -54,12 +54,29 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'success', message: 'API is running' });
 });
 
+app.get('/api/debug', async (req, res) => {
+  try {
+    const stores = await db.query('SELECT id, name, owner_id FROM stores');
+    const users = await db.query('SELECT id, email FROM users');
+    require('fs').writeFileSync('debug.json', JSON.stringify({ stores: stores.rows, users: users.rows }, null, 2));
+    res.json({ status: 'written to debug.json' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Route mounts
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/admin', require('./routes/adminRoutes'));
-app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/stores', require('./routes/storeRoutes'));
-// app.use('/api/ratings', require('./routes/ratingRoutes'));
+const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const userRoutes = require('./routes/userRoutes');
+const storeRoutes = require('./routes/storeRoutes');
+const ratingRoutes = require('./routes/ratingRoutes');
+
+app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/stores', storeRoutes);
+app.use('/api/ratings', ratingRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

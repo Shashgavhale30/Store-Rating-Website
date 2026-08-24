@@ -93,6 +93,46 @@ const userController = {
       console.error('Error deleting user:', error);
       res.status(500).json({ message: 'Server error deleting user' });
     }
+  },
+
+  updatePassword: async (req, res) => {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      const user_id = req.user.id;
+
+      if (!currentPassword || !newPassword) {
+        return res.status(400).json({ message: 'Current and new password are required' });
+      }
+
+      // Validate new password format
+      const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
+      if (!passwordRegex.test(newPassword)) {
+        return res.status(400).json({ message: 'New password must be 8-16 characters long, include at least one uppercase letter and one special character.' });
+      }
+
+      const db = require('../config/db');
+      const userResult = await db.query('SELECT * FROM users WHERE id = $1', [user_id]);
+      const user = userResult.rows[0];
+      
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      const isMatch = await bcrypt.compare(currentPassword, user.password_hash);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Incorrect current password' });
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      const new_password_hash = await bcrypt.hash(newPassword, salt);
+
+      await db.query('UPDATE users SET password_hash = $1 WHERE id = $2', [new_password_hash, user_id]);
+
+      res.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+      console.error('Error updating password:', error);
+      res.status(500).json({ message: 'Server error updating password' });
+    }
   }
 };
 

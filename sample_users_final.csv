@@ -1,0 +1,5 @@
+name,email,address,password,role
+Jonathan Normal Consumer Guy,john@example.com,123 User St NY,User@1234,USER
+Sarah Shopper Dedicated Fan,sarah@example.com,456 Market Blvd CA,Shopper#56,USER
+Michael Manager Store Boss,mike@store.com,789 Business Rd TX,Mike@1990,OWNER
+Emily Owner Boutique Expert,emily@shop.com,321 Retail Ave FL,Owner$2026,OWNER

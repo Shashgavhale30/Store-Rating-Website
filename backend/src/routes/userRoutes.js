@@ -8,5 +8,6 @@ router.post('/', verifyToken, requireRole(['ADMIN']), userController.createUserB
 router.post('/bulk', verifyToken, requireRole(['ADMIN']), userController.createBulkUsers);
 router.get('/:id', verifyToken, requireRole(['ADMIN']), userController.getUserById);
 router.delete('/:id', verifyToken, requireRole(['ADMIN']), userController.deleteUser);
+router.put('/me/password', verifyToken, userController.updatePassword);
 
 module.exports = router;

@@ -24,6 +24,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get('/', verifyToken, storeController.getAllStores);
+router.get('/owner/me', verifyToken, requireRole(['OWNER']), storeController.getStoresByOwner);
 router.post('/', verifyToken, requireRole(['ADMIN']), upload.single('photo'), storeController.createStore);
 router.post('/bulk', verifyToken, requireRole(['ADMIN']), storeController.createBulkStores);
 

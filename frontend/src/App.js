@@ -2,19 +2,27 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/routing/ProtectedRoute';
+
+// Layouts
+import AdminLayout from './layouts/AdminLayout';
+import UserLayout from './layouts/UserLayout';
+import OwnerLayout from './layouts/OwnerLayout';
+
+// Auth Pages
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 
 // Admin Pages
-import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageUsers from './pages/admin/ManageUsers';
 import ManageStores from './pages/admin/ManageStores';
 import UserDetails from './pages/admin/UserDetails';
 
-// Placeholder dashboards
-const UserDashboard = () => <div className="p-10 text-center"><h1 className="text-2xl font-bold">User Dashboard</h1><p>Requires USER role</p></div>;
-const OwnerDashboard = () => <div className="p-10 text-center"><h1 className="text-2xl font-bold">Owner Dashboard</h1><p>Requires OWNER role</p></div>;
+// User Pages
+import UserDashboard from './pages/user/UserDashboard';
+
+// Owner Pages
+import OwnerDashboard from './pages/owner/OwnerDashboard';
 
 function App() {
   return (
@@ -36,17 +44,19 @@ function App() {
         </Route>
 
         {/* Protected User Routes */}
-        <Route element={<ProtectedRoute allowedRoles={['USER']} />}>
-          <Route path="/user" element={<UserDashboard />} />
+        <Route path="/user" element={<ProtectedRoute allowedRoles={['USER']} />}>
+          <Route element={<UserLayout />}>
+            <Route index element={<UserDashboard />} />
+          </Route>
         </Route>
 
         {/* Protected Owner Routes */}
-        <Route element={<ProtectedRoute allowedRoles={['OWNER']} />}>
-          <Route path="/store-owner" element={<OwnerDashboard />} />
+        <Route path="/store-owner" element={<ProtectedRoute allowedRoles={['OWNER']} />}>
+          <Route element={<OwnerLayout />}>
+            <Route index element={<OwnerDashboard />} />
+          </Route>
         </Route>
         
-        {/* Fallback route */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </AuthProvider>
   );
