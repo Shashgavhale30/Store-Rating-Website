@@ -1,0 +1,6 @@
+name,email,address,password,role
+John Normal,john@example.com,123 User St NY,User@1234,USER
+Sarah Shopper,sarah@example.com,456 Market Blvd CA,Shopper#56,USER
+Michael Manager,mike@store.com,789 Business Rd TX,Mike@1990,OWNER
+Emily Owner,emily@shop.com,321 Retail Ave FL,Owner$2026,OWNER
+Alice Admin,alice@hq.com,555 Central DB WA,Admin!888,ADMIN
