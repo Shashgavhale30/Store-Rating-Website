@@ -20,6 +20,7 @@ import UserDetails from './pages/admin/UserDetails';
 
 // User Pages
 import UserDashboard from './pages/user/UserDashboard';
+import TopStoresDashboard from './pages/user/TopStoresDashboard';
 
 // Owner Pages
 import OwnerDashboard from './pages/owner/OwnerDashboard';
@@ -48,7 +49,9 @@ function App() {
         {/* Protected User Routes */}
         <Route path="/user" element={<ProtectedRoute allowedRoles={['USER']} />}>
           <Route element={<UserLayout />}>
-            <Route index element={<UserDashboard />} />
+            <Route index element={<Navigate to="rate" replace />} />
+            <Route path="rate" element={<UserDashboard />} />
+            <Route path="top" element={<TopStoresDashboard />} />
           </Route>
         </Route>
 

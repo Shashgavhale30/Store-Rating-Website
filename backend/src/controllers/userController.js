@@ -50,14 +50,8 @@ const userController = {
         return res.status(400).json({ message: 'User already exists with this email' });
       }
 
-      // Enforce single admin rule
-      if (role === 'ADMIN') {
-        const adminExists = await userModel.findAdminUser();
-        if (adminExists) {
-          return res.status(400).json({ message: 'A system administrator already exists. Only one admin is allowed.' });
-        }
-      }
-
+      // The original System Administrator is created on boot.
+      // They can now create additional Admin users as requested.
       // Check password complexity
       const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
       if (!passwordRegex.test(password)) {
@@ -105,13 +99,7 @@ const userController = {
           const password_hash = await bcrypt.hash(pass, salt);
           let role = user.role && ['USER', 'OWNER', 'ADMIN'].includes(user.role.toUpperCase()) ? user.role.toUpperCase() : 'USER';
           
-          if (role === 'ADMIN') {
-            const adminExists = await userModel.findAdminUser();
-            if (adminExists || createdUsers.some(u => u.role === 'ADMIN')) {
-              throw new Error('A system administrator already exists. Only one admin is allowed.');
-            }
-          }
-
+          // Removed constraint: System Admin can add more admins.
           const newUser = await userModel.createUser(user.name, user.email, password_hash, user.address || '', role);
           createdUsers.push(newUser);
         }

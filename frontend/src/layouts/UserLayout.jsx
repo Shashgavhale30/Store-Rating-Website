@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ChangePasswordModal from '../components/auth/ChangePasswordModal';
 
@@ -27,6 +27,7 @@ const UserLayout = () => {
                 <span className="font-bold text-xl text-gray-900 tracking-tight">Store<span className="text-accent">Rating</span></span>
               </div>
             </div>
+            
             <div className="flex items-center gap-4">
               <span className="text-sm text-accent hidden sm:block">
                 Welcome, <span className="font-bold text-primary">{user?.name}</span>
@@ -47,6 +48,38 @@ const UserLayout = () => {
           </div>
         </div>
       </nav>
+
+      {/* Tabs Navigation */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="-mb-px flex space-x-8">
+            <NavLink
+              to="/user/rate"
+              className={({ isActive }) => 
+                `whitespace-nowrap pb-4 pt-4 px-1 border-b-2 font-bold text-sm transition-colors ${
+                  isActive 
+                    ? 'border-accent text-accent' 
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`
+              }
+            >
+              Rate Stores
+            </NavLink>
+            <NavLink
+              to="/user/top"
+              className={({ isActive }) => 
+                `whitespace-nowrap pb-4 pt-4 px-1 border-b-2 font-bold text-sm transition-colors ${
+                  isActive 
+                    ? 'border-accent text-accent' 
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`
+              }
+            >
+              Top Rated Stores
+            </NavLink>
+          </nav>
+        </div>
+      </div>
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">

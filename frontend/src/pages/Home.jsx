@@ -1,7 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../services/api';
 
 const Home = () => {
+  const [topStores, setTopStores] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPublicStores = async () => {
+      try {
+        const response = await api.get('/stores/public');
+        setTopStores(response.data);
+      } catch (err) {
+        console.error('Failed to load public stores:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPublicStores();
+  }, []);
+
   return (
     <div className="min-h-screen bg-base font-sans overflow-hidden relative">
 
@@ -27,7 +45,7 @@ const Home = () => {
       </nav>
 
       {/* Hero Section */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32 flex flex-col items-center text-center mt-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 flex flex-col items-center text-center mt-12">
         <div className="inline-block mb-6 px-4 py-1.5 rounded-md bg-white text-gray-700 font-semibold text-sm tracking-wide shadow-sm border border-gray-200">
           Discover. Rate. Support Local.
         </div>
@@ -61,6 +79,52 @@ const Home = () => {
           </Link>
         </div>
       </main>
+
+      {/* Top Stores Showcase Section */}
+      <div className="max-w-7xl mx-auto px-4 pb-20">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-black text-primary">Top Rated Shops</h2>
+          <p className="text-gray-600 mt-2">See what places people are loving right now</p>
+        </div>
+        
+        {loading ? (
+          <div className="text-center text-primary font-bold">Loading trending stores...</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {topStores.map((store, i) => (
+              <div key={store.id} className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden card-hover">
+                <div className="h-48 bg-gray-100 relative">
+                  {store.photo_url ? (
+                    <img 
+                      src={store.photo_url.startsWith('http') ? store.photo_url : `http://localhost:5000${store.photo_url}`} 
+                      alt={store.name} 
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-primary/30 bg-secondary/10 text-5xl">🏪</div>
+                  )}
+                  <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-md shadow-md flex items-center gap-1.5 font-bold text-gray-800">
+                    <span className="text-yellow-500">★</span> 
+                    {parseFloat(store.average_rating).toFixed(1)}
+                  </div>
+                  <div className="absolute -left-2 -top-2 w-10 h-10 bg-accent text-white flex items-center justify-center rounded-full font-black shadow-lg border-2 border-white">
+                    #{i + 1}
+                  </div>
+                </div>
+                <div className="p-5">
+                  <h3 className="text-xl font-bold text-gray-900 truncate">{store.name}</h3>
+                  <p className="text-gray-500 text-sm mt-1 truncate">📍 {store.address}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="text-center mt-10">
+          <Link to="/register" className="text-accent font-bold hover:underline">
+            View more stores by signing up &rarr;
+          </Link>
+        </div>
+      </div>
       
       {/* Decorative Image/Feature Mockup Section */}
       <div className="max-w-6xl mx-auto px-4 pb-24">

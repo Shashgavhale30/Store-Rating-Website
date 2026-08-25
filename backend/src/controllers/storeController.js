@@ -1,9 +1,52 @@
 const storeModel = require('../models/storeModel');
 
 const storeController = {
+  getPublicStores: async (req, res) => {
+    try {
+      const stores = await storeModel.findAllStores();
+      const sortedStores = stores.sort((a, b) => parseFloat(b.average_rating) - parseFloat(a.average_rating));
+      // Return top 6 stores for the home page
+      res.status(200).json(sortedStores.slice(0, 6));
+    } catch (error) {
+      console.error('Error fetching public stores:', error);
+      res.status(500).json({ message: 'Server error fetching public stores' });
+    }
+  },
+
   getAllStores: async (req, res) => {
     try {
       const stores = await storeModel.findAllStores();
+      
+      if (req.user && req.user.role === 'USER') {
+        const userModel = require('../models/userModel');
+        const user = await userModel.findUserById(req.user.id);
+        
+        let filteredStores = stores;
+        if (user && user.address) {
+          const userLocation = user.address.toLowerCase().trim();
+          
+          const extractKeywords = (address) => {
+            return address.toLowerCase()
+              .split(/[\s,]+/) // Split by spaces or commas
+              .filter(word => word.length > 2); // Ignore very short words
+          };
+          const userKeywords = extractKeywords(user.address);
+
+          filteredStores = stores.filter(store => {
+            if (!store.address) return false;
+            const storeLoc = store.address.toLowerCase().trim();
+            
+            // 1. Direct overlap check
+            if (storeLoc.includes(userLocation) || userLocation.includes(storeLoc)) return true;
+
+            // 2. Keyword intersection check
+            const storeKeywords = extractKeywords(store.address);
+            return userKeywords.some(kw => storeKeywords.includes(kw));
+          });
+        }
+        return res.status(200).json(filteredStores);
+      }
+
       res.status(200).json(stores);
     } catch (error) {
       console.error('Error fetching stores:', error);
