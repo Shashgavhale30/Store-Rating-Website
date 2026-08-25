@@ -1,6 +1,6 @@
 # Store Rating Platform
 
-✨ **[View the Live Deployed Website Here!](https://6a8dbbb7063df7257978731e--storeratingweb.netlify.app/)** ✨
+✨ **[View the Live Deployed Website Here!](https://storeratingweb.netlify.app/)** ✨
 
 A full-stack web application designed for a FullStack Intern Coding Challenge. This platform allows users to submit ratings for registered stores and provides distinct, role-based dashboards for System Administrators, Store Owners, and Normal Users.
 
