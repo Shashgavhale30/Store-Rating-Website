@@ -18,6 +18,12 @@ const userModel = {
     return result.rows[0];
   },
 
+  findAdminUser: async () => {
+    const query = "SELECT * FROM users WHERE role = 'ADMIN' LIMIT 1";
+    const result = await db.query(query);
+    return result.rows[0];
+  },
+
   findAllUsers: async () => {
     const query = `
       SELECT u.id, u.name, u.email, u.address, u.role, u.created_at,

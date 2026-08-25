@@ -152,9 +152,9 @@ const ManageStores = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Manage Stores</h1>
-        <div className="flex gap-2">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-extrabold text-primary tracking-tight">Manage Stores</h1>
+        <div className="flex gap-4">
           <input 
             type="file" 
             accept=".csv" 
@@ -164,85 +164,85 @@ const ManageStores = () => {
           />
           <button 
             onClick={() => fileInputRef.current?.click()}
-            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors shadow-sm"
+            className="btn-secondary"
           >
             Bulk Upload CSV
           </button>
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors shadow-sm"
+            className="btn-primary"
           >
             + Add New Store
           </button>
         </div>
       </div>
 
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-6 flex flex-col md:flex-row gap-4">
+      <div className="glass-panel p-6 rounded-2xl mb-8 flex flex-col md:flex-row gap-6 relative z-10">
         <input 
           type="text"
           placeholder="Search by name, email, or address..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+          className="input-field flex-1"
         />
       </div>
 
       {loading ? (
-        <div className="text-gray-500">Loading stores...</div>
+        <div className="text-primary font-bold">Loading stores...</div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+        <div className="glass-panel rounded-3xl overflow-x-auto p-4">
+          <table>
+            <thead>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Photo</th>
-                <th onClick={() => requestSort('name')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                <th>Photo</th>
+                <th onClick={() => requestSort('name')} className="cursor-pointer hover:bg-white/50">
                   Store Name {sortConfig.key === 'name' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th>
                   Assigned Owner
                 </th>
-                <th onClick={() => requestSort('email')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                <th onClick={() => requestSort('email')} className="cursor-pointer hover:bg-white/50">
                   Email {sortConfig.key === 'email' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                 </th>
-                <th onClick={() => requestSort('address')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                <th onClick={() => requestSort('address')} className="cursor-pointer hover:bg-white/50">
                   Address {sortConfig.key === 'address' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                 </th>
-                <th onClick={() => requestSort('average_rating')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                <th onClick={() => requestSort('average_rating')} className="cursor-pointer hover:bg-white/50">
                   Rating {sortConfig.key === 'average_rating' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody>
               {sortedStores.map(store => (
-                <tr key={store.id} className="hover:bg-gray-50 transition-colors">
+                <tr key={store.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {store.photo_url ? (
                       <img 
                         src={store.photo_url.startsWith('http') ? store.photo_url : `http://localhost:5000${store.photo_url}`} 
                         alt="store" 
-                        className="h-10 w-10 rounded-full object-cover border border-gray-200" 
+                        className="h-12 w-12 rounded-full object-cover shadow-md border-2 border-secondary/50" 
                       />
                     ) : (
-                      <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-400">?</div>
+                      <div className="h-12 w-12 rounded-full bg-secondary/30 text-accent font-bold flex items-center justify-center">?</div>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{store.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="font-bold text-primary">{store.name}</td>
+                  <td>
                     {store.owner_name ? (
-                      <span className="text-gray-900 font-medium">{store.owner_name} <br/><span className="text-gray-400 text-xs">{store.owner_email}</span></span>
+                      <span className="font-bold text-primary">{store.owner_name} <br/><span className="text-accent text-xs font-medium">{store.owner_email}</span></span>
                     ) : (
-                      <span className="text-red-500 font-medium">Unassigned</span>
+                      <span className="text-red-500 font-bold bg-red-50 px-2 py-1 rounded-md">Unassigned</span>
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{store.email}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{store.address}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-accent">
+                  <td>{store.email}</td>
+                  <td>{store.address}</td>
+                  <td className="font-bold text-accent">
                     ★ {parseFloat(store.average_rating).toFixed(1)}
                   </td>
                 </tr>
               ))}
               {sortedStores.length === 0 && (
-                <tr><td colSpan="5" className="px-6 py-4 text-center text-gray-500">No stores found.</td></tr>
+                <tr><td colSpan="6" className="px-6 py-8 text-center text-primary font-bold">No stores found.</td></tr>
               )}
             </tbody>
           </table>
@@ -251,48 +251,50 @@ const ManageStores = () => {
 
       {/* Add Store Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Add New Store</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600">&times;</button>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="glass-panel rounded-3xl max-w-md w-full p-8 border-2 border-white/60">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-black text-primary">Add New Store</h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-accent hover:text-primary transition-colors text-2xl">&times;</button>
             </div>
             
             <form onSubmit={handleAddStore}>
-              {formError && <div className="mb-4 text-sm text-red-600 bg-red-50 p-2 rounded">{formError}</div>}
+              {formError && <div className="mb-6 text-sm text-red-600 bg-red-50 p-3 rounded-xl border border-red-200 font-bold">{formError}</div>}
               
-              <InputField label="Store Name" id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
-              <InputField label="Store Email" id="email" type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required />
-              <InputField label="Store Address" id="address" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} required />
-              
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Store Photo (Optional)</label>
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={handleFileChange}
-                  className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
-                />
-              </div>
+              <div className="space-y-4">
+                <InputField label="Store Name" id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
+                <InputField label="Store Email" id="email" type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required />
+                <InputField label="Store Address" id="address" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} required />
+                
+                <div>
+                  <label className="block text-sm font-bold text-primary mb-1">Store Photo (Optional)</label>
+                  <input 
+                    type="file" 
+                    accept="image/*" 
+                    onChange={handleFileChange}
+                    className="w-full text-sm text-accent file:mr-4 file:py-2 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-secondary file:text-primary hover:file:bg-secondary/80 transition-colors"
+                  />
+                </div>
 
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Assign to Store Owner</label>
-                <select 
-                  value={formData.owner_id} 
-                  onChange={(e) => setFormData({...formData, owner_id: e.target.value})} 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white"
-                  required
-                >
-                  <option value="" disabled>Select an owner</option>
-                  {owners.map(owner => (
-                    <option key={owner.id} value={owner.id}>{owner.name} ({owner.email})</option>
-                  ))}
-                </select>
+                <div>
+                  <label className="block text-sm font-bold text-primary mb-1">Assign to Store Owner</label>
+                  <select 
+                    value={formData.owner_id} 
+                    onChange={(e) => setFormData({...formData, owner_id: e.target.value})} 
+                    className="input-field"
+                    required
+                  >
+                    <option value="" disabled>Select an owner</option>
+                    {owners.map(owner => (
+                      <option key={owner.id} value={owner.id}>{owner.name} ({owner.email})</option>
+                    ))}
+                  </select>
+                </div>
               </div>
               
-              <div className="flex justify-end gap-2 mt-6">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">Cancel</button>
-                <button type="submit" disabled={formLoading} className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">{formLoading ? 'Adding...' : 'Add Store'}</button>
+              <div className="flex justify-end gap-4 mt-8">
+                <button type="button" onClick={() => setIsModalOpen(false)} className="btn-secondary">Cancel</button>
+                <button type="submit" disabled={formLoading} className="btn-primary">{formLoading ? 'Adding...' : 'Add Store'}</button>
               </div>
             </form>
           </div>

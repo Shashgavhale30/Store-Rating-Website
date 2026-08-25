@@ -24,12 +24,14 @@ import UserDashboard from './pages/user/UserDashboard';
 // Owner Pages
 import OwnerDashboard from './pages/owner/OwnerDashboard';
 
+import Home from './pages/Home';
+
 function App() {
   return (
     <AuthProvider>
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 

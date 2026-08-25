@@ -154,9 +154,9 @@ const ManageUsers = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Manage Users</h1>
-        <div className="flex gap-2">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-extrabold text-primary tracking-tight">Manage Users</h1>
+        <div className="flex gap-4">
           <input 
             type="file" 
             accept=".csv" 
@@ -166,31 +166,31 @@ const ManageUsers = () => {
           />
           <button 
             onClick={() => fileInputRef.current?.click()}
-            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors shadow-sm"
+            className="btn-secondary"
           >
             Bulk Upload CSV
           </button>
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors shadow-sm"
+            className="btn-primary"
           >
             + Add New User
           </button>
         </div>
       </div>
 
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-6 flex flex-col md:flex-row gap-4">
+      <div className="glass-panel p-6 rounded-2xl mb-8 flex flex-col md:flex-row gap-6 relative z-10">
         <input 
           type="text"
           placeholder="Search by name, email, or address..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+          className="input-field flex-1"
         />
         <select 
           value={filterRole}
           onChange={(e) => setFilterRole(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary"
+          className="input-field md:w-64"
         >
           <option value="ALL">All Roles</option>
           <option value="USER">Normal User</option>
@@ -200,58 +200,58 @@ const ManageUsers = () => {
       </div>
 
       {loading ? (
-        <div className="text-gray-500">Loading users...</div>
+        <div className="text-primary font-bold">Loading users...</div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+        <div className="glass-panel rounded-3xl overflow-x-auto p-4">
+          <table>
+            <thead>
               <tr>
-                <th onClick={() => requestSort('name')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                <th onClick={() => requestSort('name')} className="cursor-pointer hover:bg-white/50">
                   Name {sortConfig.key === 'name' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                 </th>
-                <th onClick={() => requestSort('email')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                <th onClick={() => requestSort('email')} className="cursor-pointer hover:bg-white/50">
                   Email {sortConfig.key === 'email' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                 </th>
-                <th onClick={() => requestSort('address')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                <th onClick={() => requestSort('address')} className="cursor-pointer hover:bg-white/50">
                   Address {sortConfig.key === 'address' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                 </th>
-                <th onClick={() => requestSort('role')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                <th onClick={() => requestSort('role')} className="cursor-pointer hover:bg-white/50">
                   Role {sortConfig.key === 'role' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                 </th>
-                <th onClick={() => requestSort('average_rating')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">
+                <th onClick={() => requestSort('average_rating')} className="cursor-pointer hover:bg-white/50">
                   Store Rating
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="text-right">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody>
               {sortedUsers.map(user => (
-                <tr key={user.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    <a href={`/admin/users/${user.id}`} className="text-primary hover:underline">
+                <tr key={user.id}>
+                  <td className="font-bold">
+                    <a href={`/admin/users/${user.id}`} className="text-primary hover:text-accent hover:underline transition-colors">
                       {user.name}
                     </a>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.address}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      user.role === 'ADMIN' ? 'bg-red-100 text-red-800' :
-                      user.role === 'OWNER' ? 'bg-blue-100 text-blue-800' :
-                      'bg-green-100 text-green-800'
+                  <td>{user.email}</td>
+                  <td>{user.address}</td>
+                  <td>
+                    <span className={`px-3 py-1 inline-flex text-xs font-bold rounded-full ${
+                      user.role === 'ADMIN' ? 'bg-red-100 text-red-800 border border-red-200' :
+                      user.role === 'OWNER' ? 'bg-secondary/50 text-accent border border-secondary' :
+                      'bg-primary/10 text-primary border border-primary/20'
                     }`}>
                       {user.role}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="font-bold">
                     {user.role === 'OWNER' ? (parseFloat(user.average_rating).toFixed(1) || '0.0') : '-'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <td className="text-right">
                     <button 
                       onClick={() => handleDeleteUser(user.id, user.name)}
-                      className="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md transition-colors"
+                      className="btn-danger text-xs"
                     >
                       Delete
                     </button>
@@ -259,7 +259,7 @@ const ManageUsers = () => {
                 </tr>
               ))}
               {sortedUsers.length === 0 && (
-                <tr><td colSpan="4" className="px-6 py-4 text-center text-gray-500">No users found.</td></tr>
+                <tr><td colSpan="6" className="px-6 py-8 text-center text-primary font-bold">No users found.</td></tr>
               )}
             </tbody>
           </table>
@@ -268,33 +268,35 @@ const ManageUsers = () => {
 
       {/* Add User Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Add New User</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600">&times;</button>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="glass-panel rounded-3xl max-w-md w-full p-8 border-2 border-white/60">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-black text-primary">Add New User</h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-accent hover:text-primary transition-colors text-2xl">&times;</button>
             </div>
             
             <form onSubmit={handleAddUser}>
-              {formError && <div className="mb-4 text-sm text-red-600 bg-red-50 p-2 rounded">{formError}</div>}
+              {formError && <div className="mb-6 text-sm text-red-600 bg-red-50 p-3 rounded-xl border border-red-200 font-bold">{formError}</div>}
               
-              <InputField label="Name" id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
-              <InputField label="Email" id="email" type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required />
-              <InputField label="Address" id="address" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} required />
-              <PasswordInput label="Password" id="password" value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} required />
-              
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-                <select value={formData.role} onChange={(e) => setFormData({...formData, role: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md">
-                  <option value="USER">Normal User</option>
-                  <option value="OWNER">Store Owner</option>
-                  <option value="ADMIN">System Administrator</option>
-                </select>
+              <div className="space-y-4">
+                <InputField label="Name" id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
+                <InputField label="Email" id="email" type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required />
+                <InputField label="Address" id="address" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} required />
+                <PasswordInput label="Password" id="password" value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} required />
+                
+                <div>
+                  <label className="block text-sm font-bold text-primary mb-1">Role</label>
+                  <select value={formData.role} onChange={(e) => setFormData({...formData, role: e.target.value})} className="input-field">
+                    <option value="USER">Normal User</option>
+                    <option value="OWNER">Store Owner</option>
+                    <option value="ADMIN">System Administrator</option>
+                  </select>
+                </div>
               </div>
               
-              <div className="flex justify-end gap-2 mt-6">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">Cancel</button>
-                <button type="submit" disabled={formLoading} className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90">{formLoading ? 'Adding...' : 'Add User'}</button>
+              <div className="flex justify-end gap-4 mt-8">
+                <button type="button" onClick={() => setIsModalOpen(false)} className="btn-secondary">Cancel</button>
+                <button type="submit" disabled={formLoading} className="btn-primary">{formLoading ? 'Adding...' : 'Add User'}</button>
               </div>
             </form>
           </div>

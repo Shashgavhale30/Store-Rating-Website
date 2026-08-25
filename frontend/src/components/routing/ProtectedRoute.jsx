@@ -13,9 +13,9 @@ const ProtectedRoute = ({ allowedRoles }) => {
     );
   }
 
-  // If not logged in, redirect to login page
+  // If not logged in, redirect to register page as per new flow
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/register" replace />;
   }
 
   // If roles are specified and user's role is not in the list, redirect to unauthorized/login

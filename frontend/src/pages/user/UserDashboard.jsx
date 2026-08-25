@@ -97,15 +97,15 @@ const UserDashboard = () => {
 
   return (
     <div>
-      <div className="mb-8">
+      <div className="mb-8 bg-white border border-gray-200 rounded-lg p-8 shadow-sm">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Discover Stores</h1>
-        <p className="text-gray-600">Find and rate your favorite stores</p>
+        <p className="text-gray-600 font-medium text-lg">Find and rate your favorite stores</p>
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-8 flex flex-col md:flex-row gap-4">
-        <div className="relative flex-1">
-          <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+      <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-lg mb-8 flex flex-col md:flex-row gap-6">
+        <div className="relative flex-1 group">
+          <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-primary group-focus-within:text-accent transition-colors">
             🔍
           </span>
           <input 
@@ -113,11 +113,11 @@ const UserDashboard = () => {
             placeholder="Search stores by name..."
             value={nameSearch}
             onChange={(e) => setNameSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+            className="input-field pl-12"
           />
         </div>
-        <div className="relative flex-1">
-          <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+        <div className="relative flex-1 group">
+          <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-primary group-focus-within:text-accent transition-colors">
             📍
           </span>
           <input 
@@ -125,7 +125,7 @@ const UserDashboard = () => {
             placeholder="Search by location / address..."
             value={locationSearch}
             onChange={(e) => setLocationSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+            className="input-field pl-12"
           />
         </div>
       </div>
@@ -133,35 +133,37 @@ const UserDashboard = () => {
       {/* Store Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredStores.map(store => (
-          <div key={store.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow group flex flex-col">
+          <div key={store.id} className="bg-white border border-gray-200 shadow-sm rounded-lg overflow-hidden card-hover flex flex-col">
             {/* Store Photo Header */}
-            <div className="h-40 bg-gray-200 relative overflow-hidden">
+            <div className="h-48 bg-gray-100 relative overflow-hidden">
               {store.photo_url ? (
                 <img 
                   src={store.photo_url.startsWith('http') ? store.photo_url : `http://localhost:5000${store.photo_url}`} 
                   alt={store.name} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-100">
-                  <span className="text-4xl">🏪</span>
+                <div className="w-full h-full flex items-center justify-center text-primary/30 bg-secondary/10">
+                  <span className="text-6xl">🏪</span>
                 </div>
               )}
               {/* Overall Rating Badge overlay */}
-              <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm flex items-center gap-1 font-bold text-gray-800">
-                <span className="text-yellow-400">★</span> 
+              <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-md shadow flex items-center gap-1.5 font-semibold text-gray-800 border border-gray-200">
+                <span className="text-yellow-500">★</span> 
                 {parseFloat(store.average_rating).toFixed(1)}
               </div>
             </div>
 
             {/* Store Info */}
-            <div className="p-5 flex-1 flex flex-col">
-              <h3 className="text-xl font-bold text-gray-900 mb-1">{store.name}</h3>
-              <p className="text-gray-500 text-sm mb-4 flex-1 line-clamp-2">📍 {store.address}</p>
+            <div className="p-6 flex-1 flex flex-col bg-white">
+              <h3 className="text-xl font-bold text-gray-900 mb-2 truncate">{store.name}</h3>
+              <p className="text-gray-600 text-sm mb-6 flex-1 font-medium bg-gray-50 p-3 rounded-md border border-gray-100 flex items-start gap-2">
+                <span className="text-gray-400">📍</span> {store.address}
+              </p>
               
               <div className="pt-4 border-t border-gray-100 mt-auto">
                 <div className="flex flex-col gap-2">
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     {userRatings[store.id] ? 'Your Rating' : 'Rate this store'}
                   </span>
                   <StarRating 
@@ -177,10 +179,10 @@ const UserDashboard = () => {
       </div>
 
       {filteredStores.length === 0 && (
-        <div className="text-center py-16 bg-white rounded-xl border border-gray-200 shadow-sm">
-          <span className="text-4xl mb-4 block">🔍</span>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">No stores found</h3>
-          <p className="text-gray-500">Try adjusting your search terms.</p>
+        <div className="text-center py-20 bg-white border border-gray-200 shadow-sm rounded-lg">
+          <span className="text-4xl mb-4 block text-gray-400">🔍</span>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">No stores found</h3>
+          <p className="text-gray-600">Try adjusting your search terms.</p>
         </div>
       )}
     </div>

@@ -34,9 +34,28 @@ const userController = {
     try {
       const { name, email, password, address, role } = req.body;
       
+      // Validations
+      if (!name || name.length < 20 || name.length > 60) {
+        return res.status(400).json({ message: 'Name must be between 20 and 60 characters.' });
+      }
+      if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+        return res.status(400).json({ message: 'Please provide a valid email address.' });
+      }
+      if (!address || address.length > 400) {
+        return res.status(400).json({ message: 'Address must not exceed 400 characters.' });
+      }
+
       const existingUser = await userModel.findUserByEmail(email);
       if (existingUser) {
         return res.status(400).json({ message: 'User already exists with this email' });
+      }
+
+      // Enforce single admin rule
+      if (role === 'ADMIN') {
+        const adminExists = await userModel.findAdminUser();
+        if (adminExists) {
+          return res.status(400).json({ message: 'A system administrator already exists. Only one admin is allowed.' });
+        }
       }
 
       // Check password complexity
@@ -65,6 +84,16 @@ const userController = {
       for (const user of users) {
         const existingUser = await userModel.findUserByEmail(user.email);
         if (!existingUser) {
+          if (!user.name || user.name.length < 20 || user.name.length > 60) {
+            throw new Error(`Invalid name for user ${user.email}. Must be 20-60 characters.`);
+          }
+          if (!user.email || !/^\S+@\S+\.\S+$/.test(user.email)) {
+            throw new Error(`Invalid email format for ${user.email}.`);
+          }
+          if (!user.address || user.address.length > 400) {
+            throw new Error(`Invalid address for user ${user.email}. Max 400 characters.`);
+          }
+
           // Check password complexity for bulk upload too
           const pass = user.password || 'Temp@123';
           const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
@@ -76,6 +105,13 @@ const userController = {
           const password_hash = await bcrypt.hash(pass, salt);
           let role = user.role && ['USER', 'OWNER', 'ADMIN'].includes(user.role.toUpperCase()) ? user.role.toUpperCase() : 'USER';
           
+          if (role === 'ADMIN') {
+            const adminExists = await userModel.findAdminUser();
+            if (adminExists || createdUsers.some(u => u.role === 'ADMIN')) {
+              throw new Error('A system administrator already exists. Only one admin is allowed.');
+            }
+          }
+
           const newUser = await userModel.createUser(user.name, user.email, password_hash, user.address || '', role);
           createdUsers.push(newUser);
         }
@@ -90,11 +126,17 @@ const userController = {
   deleteUser: async (req, res) => {
     try {
       const { id } = req.params;
-      const deletedUser = await userModel.deleteUser(id);
       
-      if (!deletedUser) {
+      const userToDelete = await userModel.findUserById(id);
+      if (!userToDelete) {
         return res.status(404).json({ message: 'User not found' });
       }
+      
+      if (userToDelete.role === 'ADMIN') {
+        return res.status(400).json({ message: 'System administrator cannot be deleted.' });
+      }
+
+      const deletedUser = await userModel.deleteUser(id);
       
       res.status(200).json({ message: 'User deleted successfully', user: deletedUser });
     } catch (error) {

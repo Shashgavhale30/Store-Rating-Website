@@ -7,6 +7,19 @@ const authController = {
     try {
       const { name, email, address, password } = req.body;
 
+      // Validate Name
+      if (!name || name.length < 20 || name.length > 60) {
+        return res.status(400).json({ message: 'Name must be between 20 and 60 characters.' });
+      }
+      // Validate Email
+      if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+        return res.status(400).json({ message: 'Please provide a valid email address.' });
+      }
+      // Validate Address
+      if (!address || address.length > 400) {
+        return res.status(400).json({ message: 'Address must not exceed 400 characters.' });
+      }
+
       // Check if user already exists
       const existingUser = await userModel.findUserByEmail(email);
       if (existingUser) {

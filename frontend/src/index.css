@@ -4,12 +4,53 @@
 
 @layer base {
   body {
-    @apply bg-gray-50 text-gray-900 font-sans antialiased;
+    @apply bg-base text-gray-900 font-sans antialiased;
   }
 }
 
 @layer utilities {
   .glass-panel {
-    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl;
+    @apply bg-white border border-gray-200 shadow-sm rounded-lg;
+  }
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-md;
+  }
+}
+
+@layer components {
+  /* Global Table Styles */
+  table {
+    @apply min-w-full divide-y divide-gray-200 bg-white rounded-lg overflow-hidden border border-gray-200;
+  }
+  thead {
+    @apply bg-gray-50;
+  }
+  th {
+    @apply px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b border-gray-200;
+  }
+  tbody {
+    @apply divide-y divide-gray-200;
+  }
+  td {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-gray-800 transition-colors;
+  }
+  tr {
+    @apply hover:bg-gray-50 transition-colors duration-200;
+  }
+
+  /* Standard Action Buttons */
+  .btn-primary {
+    @apply bg-accent text-white font-semibold px-6 py-2 rounded-md shadow-sm hover:bg-blue-700 transition-colors duration-200;
+  }
+  .btn-secondary {
+    @apply bg-white text-gray-800 border border-gray-300 font-semibold px-6 py-2 rounded-md shadow-sm hover:bg-gray-50 transition-colors duration-200;
+  }
+  .btn-danger {
+    @apply bg-white text-red-600 border border-red-300 font-semibold px-4 py-2 rounded-md hover:bg-red-50 transition-colors;
+  }
+
+  /* Form Inputs */
+  .input-field {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all bg-white text-gray-900 shadow-sm;
   }
 }

@@ -61,9 +61,9 @@ const OwnerDashboard = () => {
 
   if (stores.length === 0) {
     return (
-      <div className="text-center py-20 bg-white rounded-xl shadow-sm border border-gray-200">
+      <div className="text-center py-20 bg-white border border-gray-200 shadow-sm rounded-lg">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">No Stores Found</h2>
-        <p className="text-gray-500">You haven't been assigned any stores yet. Please contact the administrator.</p>
+        <p className="text-gray-600 font-medium">You haven't been assigned any stores yet. Please contact the administrator.</p>
       </div>
     );
   }
@@ -74,12 +74,12 @@ const OwnerDashboard = () => {
     <div className="flex flex-col gap-6">
       {/* Store Selector (if multiple stores owned) */}
       {stores.length > 1 && (
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Select Store to View</label>
+        <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-lg">
+          <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide mb-2">Select Store to View</label>
           <select 
             value={activeStoreId} 
             onChange={(e) => setActiveStoreId(e.target.value)}
-            className="w-full md:w-1/3 px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-primary"
+            className="input-field md:w-1/3"
           >
             {stores.map(store => (
               <option key={store.id} value={store.id}>{store.name}</option>
@@ -90,23 +90,23 @@ const OwnerDashboard = () => {
 
       {/* Analytics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-6">
-          <div className="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-4xl">
+        <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-lg flex items-center gap-6">
+          <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-3xl">
             ★
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Average Rating</p>
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Average Rating</p>
             <h3 className="text-4xl font-bold text-gray-900">{parseFloat(activeStore?.average_rating).toFixed(1)}</h3>
             <p className="text-sm text-gray-500 mt-1">out of 5.0</p>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-6">
-          <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-4xl">
+        <div className="bg-white border border-gray-200 shadow-sm p-6 rounded-lg flex items-center gap-6">
+          <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-3xl">
             👥
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Ratings</p>
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Total Ratings</p>
             <h3 className="text-4xl font-bold text-gray-900">{ratings.length}</h3>
             <p className="text-sm text-gray-500 mt-1">submitted by users</p>
           </div>
@@ -114,41 +114,41 @@ const OwnerDashboard = () => {
       </div>
 
       {/* Ratings Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white border border-gray-200 shadow-sm rounded-lg overflow-hidden mt-4">
         <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
           <h2 className="text-lg font-bold text-gray-900">User Ratings History</h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-white">
+          <table>
+            <thead>
               <tr>
-                <th onClick={() => requestSort('user_name')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors">
+                <th onClick={() => requestSort('user_name')} className="cursor-pointer hover:bg-white/50">
                   User Name {sortConfig.key === 'user_name' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                 </th>
-                <th onClick={() => requestSort('rating')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors">
+                <th onClick={() => requestSort('rating')} className="cursor-pointer hover:bg-white/50">
                   Rating Given {sortConfig.key === 'rating' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                 </th>
-                <th onClick={() => requestSort('updated_at')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors">
+                <th onClick={() => requestSort('updated_at')} className="cursor-pointer hover:bg-white/50">
                   Date Submitted {sortConfig.key === 'updated_at' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody>
               {sortedRatings.map(rating => (
-                <tr key={rating.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{rating.user_name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-yellow-500">
-                    {Array(rating.rating).fill('★').join('')}
-                    <span className="text-gray-300">{Array(5 - rating.rating).fill('★').join('')}</span>
-                    <span className="text-gray-600 ml-2 font-normal">({rating.rating})</span>
+                <tr key={rating.id}>
+                  <td className="font-bold">{rating.user_name}</td>
+                  <td>
+                    <span className="text-accent drop-shadow-sm">{Array(rating.rating).fill('★').join('')}</span>
+                    <span className="text-secondary/50">{Array(5 - rating.rating).fill('★').join('')}</span>
+                    <span className="text-primary ml-2 font-bold">({rating.rating})</span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td>
                     {new Date(rating.updated_at).toLocaleDateString()} at {new Date(rating.updated_at).toLocaleTimeString()}
                   </td>
                 </tr>
               ))}
               {sortedRatings.length === 0 && (
-                <tr><td colSpan="3" className="px-6 py-8 text-center text-gray-500">No ratings have been submitted yet.</td></tr>
+                <tr><td colSpan="3" className="px-6 py-8 text-center text-accent/70 font-medium">No ratings have been submitted yet.</td></tr>
               )}
             </tbody>
           </table>
