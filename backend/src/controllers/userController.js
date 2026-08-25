@@ -34,10 +34,6 @@ const userController = {
     try {
       const { name, email, password, address, role } = req.body;
       
-      if (role === 'ADMIN') {
-        return res.status(403).json({ message: 'Cannot create additional Admin accounts. Only one Admin is allowed.' });
-      }
-
       const existingUser = await userModel.findUserByEmail(email);
       if (existingUser) {
         return res.status(400).json({ message: 'User already exists with this email' });
@@ -79,7 +75,6 @@ const userController = {
           const salt = await bcrypt.genSalt(10);
           const password_hash = await bcrypt.hash(pass, salt);
           let role = user.role && ['USER', 'OWNER', 'ADMIN'].includes(user.role.toUpperCase()) ? user.role.toUpperCase() : 'USER';
-          if (role === 'ADMIN') role = 'USER'; // Prevent creating additional admins via CSV
           
           const newUser = await userModel.createUser(user.name, user.email, password_hash, user.address || '', role);
           createdUsers.push(newUser);

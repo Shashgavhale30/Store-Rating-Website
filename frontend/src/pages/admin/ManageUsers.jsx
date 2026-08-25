@@ -288,6 +288,7 @@ const ManageUsers = () => {
                 <select value={formData.role} onChange={(e) => setFormData({...formData, role: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md">
                   <option value="USER">Normal User</option>
                   <option value="OWNER">Store Owner</option>
+                  <option value="ADMIN">System Administrator</option>
                 </select>
               </div>
               
