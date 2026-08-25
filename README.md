@@ -1,5 +1,7 @@
 # Store Rating Platform
 
+✨ **[View the Live Deployed Website Here!](https://6a8dbbb7063df7257978731e--storeratingweb.netlify.app/)** ✨
+
 A full-stack web application designed for a FullStack Intern Coding Challenge. This platform allows users to submit ratings for registered stores and provides distinct, role-based dashboards for System Administrators, Store Owners, and Normal Users.
 
 ## 🚀 Tech Stack
@@ -16,7 +18,7 @@ A full-stack web application designed for a FullStack Intern Coding Challenge. T
 
 | Admin Dashboard | Owner Dashboard |
 | :---: | :---: |
-| ![Admin Dashboard](screenshots/AdminPage.jpg) | ![Owner Dashboard](screenshots/OwnerDashboard.jpg) |
+| ![Admin Dashboard](screenshots/AdminDashboard.jpg) | ![Owner Dashboard](screenshots/OwnerDashboard.jpg) |
 
 ## 👥 User Roles & Features
 
