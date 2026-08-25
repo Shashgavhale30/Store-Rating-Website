@@ -124,7 +124,9 @@ const ManageStores = () => {
           const values = lines[i].split(',').map(v => v.trim());
           const storeObj = {};
           headers.forEach((header, index) => {
-            storeObj[header] = values[index];
+            let key = header;
+            if (key === 'location') key = 'address';
+            storeObj[key] = values[index];
           });
           
           if (storeObj['name'] && storeObj['owner_email']) {

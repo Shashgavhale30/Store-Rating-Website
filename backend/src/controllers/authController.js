@@ -13,6 +13,12 @@ const authController = {
         return res.status(400).json({ message: 'User already exists with this email' });
       }
 
+      // Check password complexity
+      const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
+      if (!passwordRegex.test(password)) {
+        return res.status(400).json({ message: 'Password must be 8-16 characters long, include at least one uppercase letter and one special character.' });
+      }
+
       // Hash password
       const salt = await bcrypt.genSalt(10);
       const password_hash = await bcrypt.hash(password, salt);

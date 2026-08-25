@@ -43,6 +43,12 @@ const userController = {
         return res.status(400).json({ message: 'User already exists with this email' });
       }
 
+      // Check password complexity
+      const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
+      if (!passwordRegex.test(password)) {
+        return res.status(400).json({ message: 'Password must be 8-16 characters long, include at least one uppercase letter and one special character.' });
+      }
+
       const salt = await bcrypt.genSalt(10);
       const password_hash = await bcrypt.hash(password, salt);
 
@@ -63,8 +69,15 @@ const userController = {
       for (const user of users) {
         const existingUser = await userModel.findUserByEmail(user.email);
         if (!existingUser) {
+          // Check password complexity for bulk upload too
+          const pass = user.password || 'Temp@123';
+          const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
+          if (!passwordRegex.test(pass)) {
+            throw new Error(`Invalid password for user ${user.email}. Must be 8-16 chars, 1 uppercase, 1 special.`);
+          }
+
           const salt = await bcrypt.genSalt(10);
-          const password_hash = await bcrypt.hash(user.password || 'Temp@123', salt);
+          const password_hash = await bcrypt.hash(pass, salt);
           let role = user.role && ['USER', 'OWNER', 'ADMIN'].includes(user.role.toUpperCase()) ? user.role.toUpperCase() : 'USER';
           if (role === 'ADMIN') role = 'USER'; // Prevent creating additional admins via CSV
           

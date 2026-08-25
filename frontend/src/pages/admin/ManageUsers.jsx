@@ -82,6 +82,19 @@ const ManageUsers = () => {
   const handleAddUser = async (e) => {
     e.preventDefault();
     setFormError('');
+
+    // Frontend validations
+    if (formData.name.length < 20 || formData.name.length > 60) {
+      return setFormError('Name must be 20-60 characters');
+    }
+    if (formData.address.length > 400) {
+      return setFormError('Address max 400 characters');
+    }
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
+    if (!passwordRegex.test(formData.password)) {
+      return setFormError('Password must be 8-16 characters long, include at least one uppercase letter and one special character.');
+    }
+
     setFormLoading(true);
     
     try {
@@ -114,7 +127,9 @@ const ManageUsers = () => {
           const values = lines[i].split(',').map(v => v.trim());
           const userObj = {};
           headers.forEach((header, index) => {
-            userObj[header] = values[index];
+            let key = header;
+            if (key === 'location') key = 'address';
+            userObj[key] = values[index];
           });
           if (userObj['name'] && userObj['email']) {
             bulkUsers.push(userObj);

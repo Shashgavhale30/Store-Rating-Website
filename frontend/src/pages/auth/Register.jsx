@@ -113,7 +113,7 @@ const Register = () => {
             error={errors.email}
           />
           <InputField
-            label="Address"
+            label="Location / Address"
             id="address"
             placeholder="Max 400 characters"
             value={formData.address}

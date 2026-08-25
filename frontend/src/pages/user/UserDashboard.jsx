@@ -36,7 +36,8 @@ const UserDashboard = () => {
   const [stores, setStores] = useState([]);
   const [userRatings, setUserRatings] = useState({});
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [nameSearch, setNameSearch] = useState('');
+  const [locationSearch, setLocationSearch] = useState('');
   const [savingStoreId, setSavingStoreId] = useState(null);
 
   const fetchStoresAndRatings = async () => {
@@ -82,11 +83,12 @@ const UserDashboard = () => {
   };
 
   const filteredStores = stores.filter(store => {
-    const term = searchTerm.toLowerCase();
-    return (
-      store.name.toLowerCase().includes(term) ||
-      (store.address && store.address.toLowerCase().includes(term))
-    );
+    const nTerm = nameSearch.toLowerCase();
+    const lTerm = locationSearch.toLowerCase();
+    const matchesName = store.name.toLowerCase().includes(nTerm);
+    const matchesLocation = store.address ? store.address.toLowerCase().includes(lTerm) : false;
+    // If locationSearch is empty, it shouldn't filter out stores without address, just match name
+    return matchesName && (lTerm === '' ? true : matchesLocation);
   });
 
   if (loading) {
@@ -101,16 +103,28 @@ const UserDashboard = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-8">
-        <div className="relative">
+      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-8 flex flex-col md:flex-row gap-4">
+        <div className="relative flex-1">
           <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
             🔍
           </span>
           <input 
             type="text"
-            placeholder="Search stores by name or address..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search stores by name..."
+            value={nameSearch}
+            onChange={(e) => setNameSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+          />
+        </div>
+        <div className="relative flex-1">
+          <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+            📍
+          </span>
+          <input 
+            type="text"
+            placeholder="Search by location / address..."
+            value={locationSearch}
+            onChange={(e) => setLocationSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
           />
         </div>

@@ -7,6 +7,8 @@ const OwnerDashboard = () => {
   const [ratings, setRatings] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [sortConfig, setSortConfig] = useState({ key: 'updated_at', direction: 'desc' });
+
   useEffect(() => {
     const fetchStores = async () => {
       try {
@@ -36,6 +38,24 @@ const OwnerDashboard = () => {
     };
     fetchRatings();
   }, [activeStoreId]);
+
+  const requestSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedRatings = [...ratings].sort((a, b) => {
+    if (a[sortConfig.key] < b[sortConfig.key]) {
+      return sortConfig.direction === 'asc' ? -1 : 1;
+    }
+    if (a[sortConfig.key] > b[sortConfig.key]) {
+      return sortConfig.direction === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
 
   if (loading) return <div className="text-center py-10">Loading your dashboard...</div>;
 
@@ -102,13 +122,19 @@ const OwnerDashboard = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-white">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rating Given</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Submitted</th>
+                <th onClick={() => requestSort('user_name')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors">
+                  User Name {sortConfig.key === 'user_name' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                </th>
+                <th onClick={() => requestSort('rating')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors">
+                  Rating Given {sortConfig.key === 'rating' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                </th>
+                <th onClick={() => requestSort('updated_at')} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors">
+                  Date Submitted {sortConfig.key === 'updated_at' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {ratings.map(rating => (
+              {sortedRatings.map(rating => (
                 <tr key={rating.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{rating.user_name}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-yellow-500">
@@ -121,7 +147,7 @@ const OwnerDashboard = () => {
                   </td>
                 </tr>
               ))}
-              {ratings.length === 0 && (
+              {sortedRatings.length === 0 && (
                 <tr><td colSpan="3" className="px-6 py-8 text-center text-gray-500">No ratings have been submitted yet.</td></tr>
               )}
             </tbody>

@@ -12,21 +12,21 @@ db.query('SELECT NOW()', async (err, res) => {
     console.error('Failed to connect to the database:', err.stack);
   } else {
     console.log('Successfully connected to the database at:', res.rows[0].now);
-    
+
     // Auto-create Admin
     try {
       const userModel = require('./models/userModel');
       const bcrypt = require('bcryptjs');
-      const adminEmail = 'admin@storerating.com';
-      
+      const adminEmail = 'admin@gmail.com';
+
       const adminExists = await userModel.findUserByEmail(adminEmail);
       if (!adminExists) {
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash('Admin@123', salt);
-        await userModel.createUser('System Administrator', adminEmail, hash, 'HQ', 'ADMIN');
+        await userModel.createUser('Administrator Account', adminEmail, hash, 'Nagpur, Maharashtra', 'ADMIN');
         console.log(`✅ Default admin created: ${adminEmail} / Admin@123`);
       }
-      
+
       // Auto-migrate: Add photo_url to stores if it doesn't exist
       try {
         await db.query(`ALTER TABLE stores ADD COLUMN IF NOT EXISTS photo_url VARCHAR(255);`);
@@ -34,7 +34,7 @@ db.query('SELECT NOW()', async (err, res) => {
       } catch (alterErr) {
         console.error('Failed to alter stores table:', alterErr);
       }
-      
+
     } catch (seedErr) {
       console.error('Failed to seed admin:', seedErr);
     }
