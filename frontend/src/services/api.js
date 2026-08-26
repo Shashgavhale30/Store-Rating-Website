@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://store-rating-backend.onrender.com/api',
+  baseURL: process.env.REACT_APP_API_URL || 'https://store-rating-backend-lhj3.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
