@@ -42,7 +42,16 @@ db.query('SELECT NOW()', async (err, res) => {
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://storeratingweb.netlify.app',
+    'http://localhost:3000',
+    'http://localhost:5173'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Serve static uploads
